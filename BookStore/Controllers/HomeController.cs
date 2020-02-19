@@ -51,5 +51,11 @@ namespace BookStore.Controllers
 
             return View();
         }
+
+        public ViewResult SomeMethod()
+        {
+            ViewData["Head"] = "Привет мир!";
+            return View();
+        }
     }
 }
