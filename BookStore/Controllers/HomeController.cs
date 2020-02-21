@@ -19,6 +19,8 @@ namespace BookStore.Controllers
             // передаем все объекты в динамическое свойство Books в ViewBag
             ViewBag.Books = books;
             // возвращаем представление
+            HttpContext.Response.Cookies["id"].Value = "ca-4353w";
+            Session["name"] = "Tom";
             return View();
         }
         [HttpGet]
@@ -52,10 +54,32 @@ namespace BookStore.Controllers
             return View();
         }
 
-        public ViewResult SomeMethod()
+        public void SomeMethod()
         {
-            ViewData["Head"] = "Привет мир!";
-            return View();
+            ViewData["Head"] = First();
+            HttpContext.Response.Write(First());
+            //return View();
         }
+        public string First()
+        {
+            string browser = HttpContext.Request.Browser.Browser;
+            string user_agent = HttpContext.Request.UserAgent;
+            string url = HttpContext.Request.RawUrl;
+            string ip = HttpContext.Request.UserHostAddress;
+            string referrer = HttpContext.Request.UrlReferrer == null ? "" : HttpContext.Request.UrlReferrer.AbsoluteUri;
+            return "<p>Browser: " + browser + "</p><p>User-Agent: " + user_agent + "</p><p>Url запроса: " + url +
+                "</p><p>Реферер: " + referrer + "</p><p>IP-адрес: " + ip + "</p>";
+        }
+        public void ContextData()
+
+        {
+            var val = Session["name"];
+            string id = HttpContext.Request.Cookies["id"].Value;
+            bool IsAdmin = HttpContext.User.IsInRole("admin"); // определяем, принадлежит ли пользователь к администраторам
+            bool IsAuth = HttpContext.User.Identity.IsAuthenticated; // аутентифицирован ли пользователь
+            string login = HttpContext.User.Identity.Name; // логин авторизованного пользователя
+            HttpContext.Response.Write($"<h1>Hello World {id} - {val}</h1>");
+        }
+
     }
 }
